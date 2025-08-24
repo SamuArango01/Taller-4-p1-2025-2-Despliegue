@@ -1,0 +1,33 @@
+{% extends 'base.html' %} {% block title %}News - Emmanuel Cortés{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h1 class="mb-4 text-center">Latest News</h1>
+
+    {% for item in newss %}
+    <div class="card mb-3 shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">{{ item.headline }}</h5>
+        <p class="card-text">{{ item.body }}</p>
+        <p class="card-text">
+          <small class="text-muted">
+            <i class="fas fa-calendar-alt"></i> Publicado: {{ item.date }}
+          </small>
+        </p>
+      </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info text-center" role="alert">
+      <h4>Sin noticias disponibles</h4>
+      <p class="mb-0">
+        No hay noticias publicadas en este momento. Vuelve más tarde para ver
+        las últimas actualizaciones.
+      </p>
+      <div class="mt-3">
+        <a href="{% url 'home' %}" class="btn btn-primary">Volver al inicio</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends 'base.html' %} {% block title %}Statistics -MovieDatabase{%endblock%}
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1 class="text-center mb-4">Movie Database Statistics</h1>
+  </div>
+</div>
+
+<!-- Tarjetas de estadísticas generales -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Total Movies</h5>
+        <h2 class="text-primary">{{ total_movies }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Unique Genres</h5>
+        <h2 class="text-success">{{ unique_genres }}</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title">Years Covered</h5>
+        <h2 class="text-warning">{{ unique_years }}</h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gráficas -->
+<div class="row">
+  <!-- Gráfica de películas por género -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Movies by Genre</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="genreChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráfica de películas por año -->
+  <div class="col-md-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Movies by Year</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="yearChart" width="400" height="400"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tabla de datos -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Genre Distribution</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Genre</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in movies_by_genre %}
+            <tr>
+              <td>{{ item.genre }}</td>
+              <td>{{ item.count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5>Year Distribution</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in movies_by_year %}
+            <tr>
+              <td>{{ item.year }}</td>
+              <td>{{ item.count }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Gráfica de géneros
+  const genreCtx = document.getElementById('genreChart').getContext('2d');
+  const genreChart = new Chart(genreCtx, {
+      type: 'pie',
+      data: {
+          labels: {{ genre_labels|safe }},
+          datasets: [{
+              label: 'Movies by Genre',
+              data: {{ genre_data|safe }},
+              backgroundColor: [
+                  '#FF6384',
+                  '#36A2EB',
+                  '#FFCE56',
+                  '#4BC0C0',
+                  '#9966FF',
+                  '#FF9F40',
+                  '#FF6384',
+                  '#C9CBCF'
+              ],
+              hoverOffset: 4
+          }]
+      },
+      options: {
+          responsive: true,
+          plugins: {
+              legend: {
+                  position: 'bottom',
+              }
+          }
+      }
+  });
+
+  // Gráfica de años
+  const yearCtx = document.getElementById('yearChart').getContext('2d');
+  const yearChart = new Chart(yearCtx, {
+      type: 'bar',
+      data: {
+          labels: {{ year_labels|safe }},
+          datasets: [{
+              label: 'Movies by Year',
+              data: {{ year_data|safe }},
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          responsive: true,
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: {
+                      stepSize: 1
+                  }
+              }
+          }
+      }
+  });
+</script>
+{% endblock %}
