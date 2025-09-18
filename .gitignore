@@ -26,3 +26,13 @@ media/
 # OS
 .DS_Store
 Thumbs.db
+
+# API KEY
+openAI.env
+*.env
+.env
+
+# API KEY HUGGING FACE
+huggingface.env
+*.env
+.env

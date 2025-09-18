@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Recommendations{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-8 mx-auto">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="h4 mb-3">Recomendaciones</h1>
+        <form method="post" class="row g-3">
+          {% csrf_token %}
+          <div class="col-12">
+            <label for="prompt" class="form-label">Describe lo que buscas</label>
+            <input
+              type="text"
+              id="prompt"
+              name="prompt"
+              value="{{ prompt }}"
+              class="form-control"
+              placeholder="Ej: Película de la segunda guerra mundial"
+              required
+            />
+          </div>
+          <div class="col-12 d-flex gap-2">
+            <button type="submit" class="btn btn-primary">Recomendar</button>
+            <a href="{% url 'recommendations' %}" class="btn btn-outline-secondary">Limpiar</a>
+          </div>
+        </form>
+
+        {% if error %}
+          <div class="alert alert-danger mt-3 mb-0">{{ error }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if result %}
+  <div class="col-12 col-lg-8 mx-auto">
+    <div class="card mt-4">
+      <div class="row g-0">
+        <div class="col-md-4">
+          {% if result.image_url %}
+          <img src="{{ result.image_url }}" class="img-fluid rounded-start" alt="{{ result.title }}">
+          {% else %}
+          <div class="bg-light h-100 w-100 d-flex align-items-center justify-content-center text-muted">
+            No image
+          </div>
+          {% endif %}
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h2 class="h5 card-title">{{ result.title }}</h2>
+            <p class="card-text">{{ result.description }}</p>
+            <p class="card-text">
+              <small class="text-muted">Similitud: {{ result.similarity|floatformat:4 }}</small>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
